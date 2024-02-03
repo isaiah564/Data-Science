@@ -1,0 +1,410 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "027a80a1-1ffd-4fa8-a03e-3cd749aafc98",
+   "metadata": {},
+   "source": [
+    "### import relevant libaries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "3dcab64c-23f4-440b-bc6a-b2ebac6d75e5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "sns.set()\n",
+    "from sklearn.linear_model import LinearRegression"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "29548c2e-62e4-456d-8849-12dce5041561",
+   "metadata": {},
+   "source": [
+    "### load the data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "d33c9710-23bc-420d-bb47-88c4f03b6fba",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "s=pd.read_csv('C:\\\\Users\\\\Admin\\\\Desktop\\\\DataScience\\\\Datasets\\\\1.02. Multiple linear regression.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "2a55e006-72f0-4a99-a5d5-ed1fcb6acb72",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>SAT</th>\n",
+       "      <th>Rand 1,2,3</th>\n",
+       "      <th>GPA</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1714</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2.40</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1664</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2.52</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1760</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2.54</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1685</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2.74</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1693</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2.83</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "    SAT  Rand 1,2,3   GPA\n",
+       "0  1714           1  2.40\n",
+       "1  1664           3  2.52\n",
+       "2  1760           3  2.54\n",
+       "3  1685           3  2.74\n",
+       "4  1693           2  2.83"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "s.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "ece831d2-5368-405b-baf8-09af43525a90",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>SAT</th>\n",
+       "      <th>Rand 1,2,3</th>\n",
+       "      <th>GPA</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>84.000000</td>\n",
+       "      <td>84.000000</td>\n",
+       "      <td>84.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>1845.273810</td>\n",
+       "      <td>2.059524</td>\n",
+       "      <td>3.330238</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>104.530661</td>\n",
+       "      <td>0.855192</td>\n",
+       "      <td>0.271617</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>1634.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>2.400000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>1772.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>3.190000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>1846.000000</td>\n",
+       "      <td>2.000000</td>\n",
+       "      <td>3.380000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>1934.000000</td>\n",
+       "      <td>3.000000</td>\n",
+       "      <td>3.502500</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>2050.000000</td>\n",
+       "      <td>3.000000</td>\n",
+       "      <td>3.810000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "               SAT  Rand 1,2,3        GPA\n",
+       "count    84.000000   84.000000  84.000000\n",
+       "mean   1845.273810    2.059524   3.330238\n",
+       "std     104.530661    0.855192   0.271617\n",
+       "min    1634.000000    1.000000   2.400000\n",
+       "25%    1772.000000    1.000000   3.190000\n",
+       "50%    1846.000000    2.000000   3.380000\n",
+       "75%    1934.000000    3.000000   3.502500\n",
+       "max    2050.000000    3.000000   3.810000"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "s.describe()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b1f17ca1-4c25-465c-a828-2612c4cc6113",
+   "metadata": {},
+   "source": [
+    "## create the multiple linear regression"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fb429684-a9fb-492a-8dd0-defe155fc7aa",
+   "metadata": {},
+   "source": [
+    "### declare dependent and indepent values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "d94332f2-8f8c-4b9e-8789-4acdd7e8f23f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x=s[['SAT','Rand 1,2,3']]\n",
+    "y=s['GPA']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "819bcd9a-1a0b-4001-b0eb-be73aadc7774",
+   "metadata": {},
+   "source": [
+    "### regression itself"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "30d609de-e23c-4e2a-96f3-1bb88d6e893a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "reg=LinearRegression()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "54dd1450-d766-4330-a8d9-aa10fa51bba8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.fit(x,y)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "43a5f928-75ca-4178-81f7-30d254aef2e1",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 0.00165354, -0.00826982])"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.coef_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "0fd3a7f7-ca51-4d26-aadd-584ebdd2c77c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.29603261264909486"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.intercept_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "71fe064d-113e-4f55-ac3f-4569d47f838f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([3.12193344, 3.0227167 , 3.18145672, 3.05744108, 3.07893924,\n",
+       "       3.0491776 , 3.19634071, 3.20461053, 3.24263988, 3.33027548,\n",
+       "       3.14011817, 3.21452966, 3.15665782, 3.10208671, 3.21122258,\n",
+       "       3.37492322, 3.17318901, 3.04752194, 3.31704714, 3.2244488 ,\n",
+       "       3.18311026, 3.11862213, 3.02106316, 3.07728781, 3.55185431,\n",
+       "       3.30713012, 3.24264199, 3.28232277, 3.62791723, 3.24594696,\n",
+       "       3.21287824, 3.48571263, 3.22279949, 3.33854319, 3.38815155,\n",
+       "       3.33689176, 3.26082672, 3.50224382, 3.20956693, 3.30712801,\n",
+       "       3.3550786 , 3.34681512, 3.52208633, 3.10209094, 3.57831097,\n",
+       "       3.46256094, 3.29555321, 3.52209055, 3.35838992, 3.54358237,\n",
+       "       3.25090547, 3.35508283, 3.43279718, 2.98138027, 3.39476783,\n",
+       "       3.40799617, 3.14012028, 3.51712993, 3.22445092, 3.40634051,\n",
+       "       3.53531889, 3.26082672, 3.40137778, 3.64610196, 3.41791742,\n",
+       "       3.30878155, 3.33027548, 3.47744281, 3.35673426, 3.46421236,\n",
+       "       3.46751945, 3.22776011, 3.55350785, 3.46917299, 3.61303113,\n",
+       "       3.60310987, 3.58988577, 3.61964741, 3.31870068, 3.47248007,\n",
+       "       3.28067345, 3.5568107 , 3.5320118 , 3.66925366])"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.predict(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ac9d6711-fc94-43e7-9ae7-255fdeeb6241",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
